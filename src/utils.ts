@@ -1,10 +1,10 @@
 import fs from 'fs';
 
 export interface Item {
-  id: number;
+  id?: number;
   title: string;
   status: boolean;
-  created_at: number;
+  created_at?: number;
   fk_user_id: number;
 }
 
@@ -30,5 +30,23 @@ export const writeData = async (data: Data) => {
       if (err) reject("Write data unsuccessful.");
       else resolve();
     });
+  });
+}
+
+export const addItem = async (item: Item) => {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      let data = await getData();
+      item.id = data.next_item_id;
+      item.created_at = Date.now();
+
+      data.items.push(item);
+      data.next_item_id++;
+      await writeData(data);
+
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
   });
 }

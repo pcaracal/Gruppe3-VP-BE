@@ -1,5 +1,5 @@
 {
-  "next_item_id": 3,
+  "next_item_id": 5,
   "items": [
     {
       "id": 1,
@@ -9,11 +9,11 @@
       "fk_user_id": 13
     },
     {
-      "id": 2,
       "title": "Cat litter",
       "status": false,
-      "created_at": 310831,
-      "fk_user_id": 3
+      "fk_user_id": 3,
+      "id": 4,
+      "created_at": 1687346950610
     }
   ]
 }
