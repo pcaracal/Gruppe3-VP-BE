@@ -50,3 +50,17 @@ export const addItem = async (item: Item) => {
     }
   });
 }
+
+export const deleteItemById = async (id: number) => {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      let data = await getData();
+      data.items = data.items.filter(item => item.id != id);
+
+      await writeData(data);
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
