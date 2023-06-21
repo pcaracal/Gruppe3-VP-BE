@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "dev": "npx ts-node-dev app.ts",
-    "run": "ts-node app.ts"
+    "dev": "npx ts-node-dev src/app.ts",
+    "start": "ts-node src/app.ts"
   },
   "author": "",
   "license": "MIT",
