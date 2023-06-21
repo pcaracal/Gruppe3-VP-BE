@@ -33,6 +33,17 @@ export const writeData = async (data: Data) => {
   });
 }
 
+export const getItems = async () => {
+  return new Promise<Item[]>(async (resolve, reject) => {
+    try {
+      const data = await getData();
+      resolve(data.items);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export const addItem = async (item: Item) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
