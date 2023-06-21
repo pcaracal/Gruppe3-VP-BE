@@ -2,10 +2,10 @@ import fs from 'fs';
 
 export interface Item {
   id?: number;
-  title: string;
-  status: boolean;
+  title?: string;
+  status?: boolean;
   created_at?: number;
-  fk_user_id: number;
+  fk_user_id?: number;
 }
 
 export interface Data {
@@ -72,7 +72,32 @@ export const deleteAllItemsByUserId = async (fk_user_id: number) => {
       data.items = data.items.filter(item => item.fk_user_id != fk_user_id);
 
       await writeData(data);
-      resolve()
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export const putHandler = async (id: number, item: Item) => {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      let data = await getData();
+      data.items = data.items.map((v) => {
+        if (v.id === id) {
+          return ({
+            id: id,
+            title: item.title || v.title,
+            status: item.status || v.status,
+            created_at: v.created_at,
+            fk_user_id: v.fk_user_id
+          });
+        }
+        else return (v);
+      });
+
+      await writeData(data);
+      resolve();
     } catch (error) {
       reject(error);
     }
