@@ -6,7 +6,6 @@ const port = 3000;
 app.use(express.json());
 
 app.get("/items", async (request, response) => {
-    response.sendFile("/data.json");
 });
 
 app.get("/items/:id", async (request, response) => {
