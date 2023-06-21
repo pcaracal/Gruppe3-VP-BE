@@ -24,3 +24,11 @@ export const getData = async () => {
   });
 }
 
+export const writeData = async (data: Data) => {
+  return new Promise<void>((resolve, reject) => {
+    fs.writeFile('./data.json', JSON.stringify(data), (err) => {
+      if (err) reject("Write data unsuccessful.");
+      else resolve();
+    });
+  });
+}
