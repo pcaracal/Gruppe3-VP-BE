@@ -64,3 +64,17 @@ export const deleteItemById = async (id: number) => {
     }
   });
 }
+
+export const deleteAllItemsByUserId = async (fk_user_id: number) => {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      let data = await getData();
+      data.items = data.items.filter(item => item.fk_user_id != fk_user_id);
+
+      await writeData(data);
+      resolve()
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
