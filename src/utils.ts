@@ -15,7 +15,7 @@ export interface Data {
 
 export const getData = async () => {
   return new Promise<Data>((resolve, reject) => {
-    fs.readFile('./data.json', (err: NodeJS.ErrnoException | null, buffer: Buffer) => {
+    fs.readFile('./data.json', (err, buffer: Buffer) => {
       if (err) reject("Get data unsuccessful.");
       else {
         resolve(JSON.parse(buffer.toString()));
