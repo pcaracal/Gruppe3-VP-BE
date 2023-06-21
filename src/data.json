@@ -1,0 +1,12 @@
+{
+  "next_item_id": 2,
+  "items": [
+    {
+      "id": 1,
+      "title": "Cat food",
+      "status": false,
+      "created_at": 421896512987,
+      "fk_user_id": 13
+    }
+  ]
+}
