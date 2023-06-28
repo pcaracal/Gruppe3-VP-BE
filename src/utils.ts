@@ -14,8 +14,8 @@ export interface Data {
 }
 
 export const getData = async () => {
-  return new Promise<Data>((resolve, reject) => {
-    fs.readFile('./data.json', (err, buffer: Buffer) => {
+  return new Promise<Data>(async (resolve, reject) => {
+    fs.readFile('./src/data.json', (err, buffer: Buffer) => {
       if (err) reject("Get data unsuccessful.");
       else {
         resolve(JSON.parse(buffer.toString()));
@@ -25,8 +25,8 @@ export const getData = async () => {
 }
 
 export const writeData = async (data: Data) => {
-  return new Promise<void>((resolve, reject) => {
-    fs.writeFile('./data.json', JSON.stringify(data), (err) => {
+  return new Promise<void>(async (resolve, reject) => {
+    fs.writeFile('./src/data.json', JSON.stringify(data), (err) => {
       if (err) reject("Write data unsuccessful.");
       else resolve();
     });
@@ -40,6 +40,16 @@ export const getItems = async () => {
       resolve(data.items);
     } catch (error) {
       reject(error);
+    }
+  });
+}
+
+export const getItemsByUserId = async (uid: number) => {
+  return new Promise<Item[]>(async (resolve, reject) => {
+    try {
+      resolve((await getItems()).filter(i => i.fk_user_id === uid));
+    } catch (error) {
+      reject(error)
     }
   });
 }
@@ -90,7 +100,7 @@ export const deleteAllItemsByUserId = async (fk_user_id: number) => {
   });
 }
 
-export const putHandler = async (id: number, item: Item) => {
+export const patchHandler = async (id: number, item: Item) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
       let data = await getData();
@@ -114,3 +124,35 @@ export const putHandler = async (id: number, item: Item) => {
     }
   });
 }
+
+
+
+export interface User {
+  id: number;
+  code: number;
+}
+
+export interface Session {
+  user?: User;
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface Request {
+      session: Session;
+      sessionID: string;
+    }
+  }
+}
+
+export const users: User[] = [
+  {
+    id: 1,
+    code: 12345
+  },
+  {
+    id: 2,
+    code: 54321
+  }
+];
