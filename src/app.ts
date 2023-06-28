@@ -29,20 +29,15 @@ app.post('/login', async (req: Request, res: Response) => {
     req.session.user = foundUser;
     res.send({ id: foundUser.id, code: foundUser.code }).status(200);
   }
-
-
-})
+});
 
 app.delete('/logout', async (req: Request, res: Response) => {
 
-})
+});
 
 app.get('/session', async (req: Request, res: Response) => {
 
-})
-
-
-
+});
 
 app.get("/items", (request, response) => {
   getData();
