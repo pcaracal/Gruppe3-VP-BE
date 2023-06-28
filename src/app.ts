@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
-import { addItem, deleteItemById, getData, putHandler } from './utils';
+import { addItem, deleteItemById, getData, patchHandler } from './utils';
 import { it } from 'node:test';
 const app: Application = express();
 const port = 3000;
@@ -20,7 +20,7 @@ app.post("/items", (request, response) => {
 app.patch("/items/:id", (request, response) => {
     const itemToPatch = parseInt(request.params.id);
     const dataToPatchWith = request.body;
-    putHandler(itemToPatch, dataToPatchWith);
+    patchHandler(itemToPatch, dataToPatchWith);
 });
 
 app.delete("/items/:id", (request, response) => {

@@ -90,7 +90,7 @@ export const deleteAllItemsByUserId = async (fk_user_id: number) => {
   });
 }
 
-export const putHandler = async (id: number, item: Item) => {
+export const patchHandler = async (id: number, item: Item) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
       let data = await getData();
