@@ -117,13 +117,13 @@ export const patchHandler = async (id: number, item: Item) => {
 
 
 
-export interface Group {
+export interface User {
   id: number;
   code: number;
 }
 
 export interface Session {
-  group?: Group;
+  user?: User;
 }
 
 declare global {
@@ -136,7 +136,7 @@ declare global {
   }
 }
 
-export const users: Group[] = [
+export const users: User[] = [
   {
     id: 1,
     code: 12345
