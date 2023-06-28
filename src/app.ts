@@ -32,12 +32,16 @@ app.post('/login', async (req: Request, res: Response) => {
 });
 
 app.delete('/logout', async (req: Request, res: Response) => {
-
+  req.session.user = undefined;
+  res.sendStatus(204);
 });
 
 app.get('/session', async (req: Request, res: Response) => {
-
+  if (!req.session.user) res.sendStatus(401);
+  else res.send({ id: req.session.user.id, code: req.session.user.code }).status(200);
 });
+
+
 
 app.get("/items", (request, response) => {
   getData();
