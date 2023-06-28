@@ -41,8 +41,6 @@ app.get('/session', async (req: Request, res: Response) => {
   else res.send({ id: req.session.user.id, code: req.session.user.code }).status(200);
 });
 
-
-
 app.get("/items", async (req: Request, res: Response) => {
   if (!req.session.user) res.sendStatus(401);
   else {
@@ -67,7 +65,7 @@ app.post("/items", async (req: Request, res: Response) => {
 });
 
 app.patch("/items/:id", async (req: Request, res: Response) => {
-  if (!req.session.user) res.sendStatus(401)
+  if (!req.session.user) res.sendStatus(401);
   else {
     const uid = req.session.user.id;
     const catreal = await getItemsByUserId(uid);
