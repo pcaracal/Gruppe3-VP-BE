@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { addItem, deleteItemById, getData, patchHandler, users } from './utils';
+import { addItem, deleteItemById, getData, getItemsByUserId, patchHandler, users } from './utils';
 const app: Application = express();
 const port = 3000;
 app.use(express.json());
@@ -43,8 +43,15 @@ app.get('/session', async (req: Request, res: Response) => {
 
 
 
-app.get("/items", (request, response) => {
-  getData();
+app.get("/items", async (req: Request, res: Response) => {
+  if (!req.session.user) res.sendStatus(401);
+  else {
+    try {
+      res.send(await getItemsByUserId(req.session.user.id)).status(200);
+    } catch (error) {
+      res.send(error).status(500);
+    }
+  }
 });
 
 app.post("/items", (request, response) => {

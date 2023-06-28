@@ -14,8 +14,8 @@ export interface Data {
 }
 
 export const getData = async () => {
-  return new Promise<Data>((resolve, reject) => {
-    fs.readFile('./data.json', (err, buffer: Buffer) => {
+  return new Promise<Data>(async (resolve, reject) => {
+    fs.readFile('./src/data.json', (err, buffer: Buffer) => {
       if (err) reject("Get data unsuccessful.");
       else {
         resolve(JSON.parse(buffer.toString()));
@@ -25,8 +25,8 @@ export const getData = async () => {
 }
 
 export const writeData = async (data: Data) => {
-  return new Promise<void>((resolve, reject) => {
-    fs.writeFile('./data.json', JSON.stringify(data), (err) => {
+  return new Promise<void>(async (resolve, reject) => {
+    fs.writeFile('./src/data.json', JSON.stringify(data), (err) => {
       if (err) reject("Write data unsuccessful.");
       else resolve();
     });
