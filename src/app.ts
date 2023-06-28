@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { addItem, deleteItemById, getData, getItemsByUserId, patchHandler, users } from './utils';
+import { Item, addItem, deleteItemById, getData, getItemsByUserId, patchHandler, users } from './utils';
 const app: Application = express();
 const port = 3000;
 app.use(express.json());
@@ -54,10 +54,14 @@ app.get("/items", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/items", (request, response) => {
-  const dataToPost = request.body;
-  addItem(dataToPost);
-  response.status(201).send("Successfully added the item");
+app.post("/items", async (req: Request, res: Response) => {
+  if (!req.session.user) res.sendStatus(401);
+  else {
+    let dataToPost: Item = req.body;
+    dataToPost.fk_user_id = req.session.user.id;
+    await addItem(dataToPost);
+    res.send("Successfully added the item").status(201);
+  }
 });
 
 app.patch("/items/:id", (request, response) => {
