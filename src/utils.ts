@@ -44,6 +44,16 @@ export const getItems = async () => {
   });
 }
 
+export const getItemsByUserId = async (uid: number) => {
+  return new Promise<Item[]>(async (resolve, reject) => {
+    try {
+      resolve((await getItems()).filter(i => i.fk_user_id === uid));
+    } catch (error) {
+      reject(error)
+    }
+  });
+}
+
 export const addItem = async (item: Item) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
