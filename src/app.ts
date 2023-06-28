@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { Item, addItem, deleteItemById, getData, getItems, getItemsByUserId, patchHandler, users } from './utils';
+import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, patchHandler, users } from './utils';
 const app: Application = express();
 const port = 3000;
 app.use(express.json());
@@ -80,14 +80,29 @@ app.patch("/items/:id", async (req: Request, res: Response) => {
 });
 
 app.delete("/items/:id", async (req: Request, res: Response) => {
-  if (!req.session.user) res.sendStatus(401);
+  const deleteId = parseInt(req.params.id);
 
-  const itemToDelete = parseInt(req.params.id);
-  await deleteItemById(itemToDelete);
+  if (!req.session.user) res.sendStatus(401);
+  else {
+    const uid = req.session.user.id;
+    const catreal = await getItemsByUserId(uid);
+    if (!catreal.find(v => v.fk_user_id === uid && v.id === Number(req.params.id))) res.sendStatus(404);
+    else {
+      await deleteItemById(deleteId);
+      res.sendStatus(204);
+    }
+  }
+
+
 });
 
 app.delete("/list", async (req: Request, res: Response) => {
-  //implement saving userId into session
+  if (!req.session.user) res.sendStatus(401);
+  else {
+    const uid = req.session.user.id;
+    await deleteAllItemsByUserId(uid);
+    res.sendStatus(204);
+  }
 });
 
 app.listen(port, () => { console.log(`App is listening to: ${port}`); });
