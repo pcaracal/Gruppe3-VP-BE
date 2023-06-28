@@ -9,7 +9,7 @@ app.use(express.json());
 
 const cors = require('cors');
 app.use(cors({
-  origin: 'http://127.0.0.1'
+  origin: '*'
 }));
 
 app.use(
