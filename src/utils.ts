@@ -114,3 +114,35 @@ export const patchHandler = async (id: number, item: Item) => {
     }
   });
 }
+
+
+
+export interface Group {
+  id: number;
+  code: number;
+}
+
+export interface Session {
+  group?: Group;
+}
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface Request {
+      session: Session;
+      sessionID: string;
+    }
+  }
+}
+
+export const users: Group[] = [
+  {
+    id: 1,
+    code: 12345
+  },
+  {
+    id: 2,
+    code: 54321
+  }
+];
