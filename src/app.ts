@@ -4,9 +4,10 @@ import './utils';
 import session from 'express-session';
 import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, patchHandler, users } from './utils';
 const app: Application = express();
+const cookieParser = require('cookie-parser');
 const port = 3000;
 app.use(express.json());
-
+app.use(cookieParser());
 import cors from 'cors';
 app.use(cors({
   origin: '*'
@@ -27,7 +28,8 @@ app.post('/login', async (req: Request, res: Response) => {
   if (!foundUser) res.sendStatus(401);
   else {
     req.session.user = foundUser;
-    res.send({ id: foundUser.id, code: foundUser.code }).status(200);
+    res.cookie('connect.sid', req.sessionID);
+    res.send({ id: foundUser.id, code: foundUser.code, cookie: req.sessionID }).status(200);
   }
 });
 
