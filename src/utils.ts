@@ -148,19 +148,6 @@ declare global {
   }
 }
 
-// export const users: User[] = [
-//   {
-//     id: 1,
-//     code: 12345
-//   },
-//   {
-//     id: 2,
-//     code: 54321
-//   }
-// ];
-
-
-
 // TODO: signup and get cats instead of fixed array yes
 export const getUsers = async () => {
   return new Promise<User[]>(async (resolve, reject) => {

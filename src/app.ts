@@ -38,7 +38,7 @@ app.post('/signup', async (req: Request, res: Response) => {
     if (!foundUser) {
       try {
         await createUser(req.body.code);
-        console.log("CAAAAAAAAAAT");
+        
         const sandcatUsers = await getUsers();
         const sandcatUser = sandcatUsers.find((u) => u.code === req.body.code)
 
