@@ -2,16 +2,19 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, patchHandler, users } from './utils';
+import { Item, addItem, createUser, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, getUsers, patchHandler } from './utils';
 const app: Application = express();
 const cookieParser = require('cookie-parser');
 const port = 3000;
 app.use(express.json());
 app.use(cookieParser());
 import cors from 'cors';
+
 app.use(cors({
-  origin: '*'
+  origin: ["http://127.0.0.1:5173", "http://127.0.0.1/session", "http://127.0.0.1/login", "http://127.0.0.1/items", "http://127.0.0.1/logout", "http://127.0.0.1/list"],
+  credentials: true,
 }));
+
 
 app.use(
   session({
@@ -21,10 +24,45 @@ app.use(
   })
 );
 
+// login endpoints
+
+app.post('/signup', async (req: Request, res: Response) => {
+  req.session.user = undefined;
+
+  if (!req.body.code) {
+    res.sendStatus(400);
+  } else {
+    const catUsers = await getUsers();
+
+    const foundUser = catUsers.find((u) => u.code === req.body.code);
+    if (!foundUser) {
+      try {
+        await createUser(req.body.code);
+        
+        const sandcatUsers = await getUsers();
+        const sandcatUser = sandcatUsers.find((u) => u.code === req.body.code)
+
+        req.session.user = sandcatUser;
+        res.cookie('connect.sid', req.sessionID);
+        res.send({ id: sandcatUser?.id, code: sandcatUser?.code, cookie: req.sessionID }).status(200);
+      } catch (error) {
+        res.send(error).status(500);
+      }
+    }
+    else {
+      req.session.user = foundUser;
+      res.cookie('connect.sid', req.sessionID);
+      res.send({ id: foundUser.id, code: foundUser.code, cookie: req.sessionID }).status(200);
+    }
+  }
+});
+
 app.post('/login', async (req: Request, res: Response) => {
   req.session.user = undefined; //Delete old session before login
 
-  const foundUser = users.find((u) => u.code === req.body.code);
+  const catUsers = await getUsers();
+
+  const foundUser = catUsers.find((u) => u.code === req.body.code);
   if (!foundUser) res.sendStatus(401);
   else {
     req.session.user = foundUser;
@@ -42,6 +80,8 @@ app.get('/session', async (req: Request, res: Response) => {
   if (!req.session.user) res.sendStatus(401);
   else res.send({ id: req.session.user.id, code: req.session.user.code }).status(200);
 });
+
+// items endpoints
 
 app.get("/items", async (req: Request, res: Response) => {
   if (!req.session.user) res.sendStatus(401);
