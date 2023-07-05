@@ -11,7 +11,7 @@ app.use(cookieParser());
 import cors from 'cors';
 
 app.use(cors({
-  origin: ["http://127.0.0.1:5173", "http://127.0.0.1/session", "http://127.0.0.1/login", "http://127.0.0.1/items", "http://127.0.0.1/logout", "http://127.0.0.1/list"],
+  origin: ["http://127.0.0.1:5173", "http://127.0.0.1/session", "http://127.0.0.1/login", "http://127.0.0.1/items", "http://127.0.0.1/logout", "http://127.0.0.1/list", "http://127.0.0.1/signup"],
   credentials: true,
 }));
 
