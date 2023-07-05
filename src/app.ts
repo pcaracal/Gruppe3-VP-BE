@@ -9,9 +9,12 @@ const port = 3000;
 app.use(express.json());
 app.use(cookieParser());
 import cors from 'cors';
+
 app.use(cors({
-  origin: '*'
+  origin: ["http://127.0.0.1:5173", "http://127.0.0.1/session", "http://127.0.0.1/login", "http://127.0.0.1/items", "http://127.0.0.1/logout", "http://127.0.0.1/list"],
+  credentials: true,
 }));
+
 
 app.use(
   session({
