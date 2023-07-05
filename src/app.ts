@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, getUsers, patchHandler } from './utils';
+import { Item, addItem, createUser, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, getUsers, patchHandler } from './utils';
 const app: Application = express();
 const cookieParser = require('cookie-parser');
 const port = 3000;
@@ -25,6 +25,37 @@ app.use(
 );
 
 // login endpoints
+
+app.post('/signup', async (req: Request, res: Response) => {
+  req.session.user = undefined;
+
+  if (!req.body.code) {
+    res.sendStatus(400);
+  } else {
+    const catUsers = await getUsers();
+
+    const foundUser = catUsers.find((u) => u.code === req.body.code);
+    if (!foundUser) {
+      try {
+        await createUser(req.body.code);
+        console.log("CAAAAAAAAAAT");
+        const sandcatUsers = await getUsers();
+        const sandcatUser = sandcatUsers.find((u) => u.code === req.body.code)
+
+        req.session.user = sandcatUser;
+        res.cookie('connect.sid', req.sessionID);
+        res.send({ id: sandcatUser?.id, code: sandcatUser?.code, cookie: req.sessionID }).status(200);
+      } catch (error) {
+        res.send(error).status(500);
+      }
+    }
+    else {
+      req.session.user = foundUser;
+      res.cookie('connect.sid', req.sessionID);
+      res.send({ id: foundUser.id, code: foundUser.code, cookie: req.sessionID }).status(200);
+    }
+  }
+});
 
 app.post('/login', async (req: Request, res: Response) => {
   req.session.user = undefined; //Delete old session before login

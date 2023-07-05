@@ -183,6 +183,7 @@ export const createUser = async (code: number) => {
       });
       data.next_user_id++;
       await writeData(data);
+      resolve();
     } catch (error) {
       reject(error);
     }
