@@ -2,7 +2,7 @@ import { Application, Request, Response } from 'express';
 import express from 'express';
 import './utils';
 import session from 'express-session';
-import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, patchHandler, users } from './utils';
+import { Item, addItem, deleteAllItemsByUserId, deleteItemById, getData, getItems, getItemsByUserId, getUsers, patchHandler } from './utils';
 const app: Application = express();
 const cookieParser = require('cookie-parser');
 const port = 3000;
@@ -24,10 +24,14 @@ app.use(
   })
 );
 
+// login endpoints
+
 app.post('/login', async (req: Request, res: Response) => {
   req.session.user = undefined; //Delete old session before login
 
-  const foundUser = users.find((u) => u.code === req.body.code);
+  const catUsers = await getUsers();
+
+  const foundUser = catUsers.find((u) => u.code === req.body.code);
   if (!foundUser) res.sendStatus(401);
   else {
     req.session.user = foundUser;
@@ -45,6 +49,8 @@ app.get('/session', async (req: Request, res: Response) => {
   if (!req.session.user) res.sendStatus(401);
   else res.send({ id: req.session.user.id, code: req.session.user.code }).status(200);
 });
+
+// items endpoints
 
 app.get("/items", async (req: Request, res: Response) => {
   if (!req.session.user) res.sendStatus(401);

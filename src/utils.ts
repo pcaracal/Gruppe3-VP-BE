@@ -11,6 +11,8 @@ export interface Item {
 export interface Data {
   items: Item[];
   next_item_id: number;
+  users: User[];
+  next_user_id: number;
 }
 
 export const getData = async () => {
@@ -146,13 +148,43 @@ declare global {
   }
 }
 
-export const users: User[] = [
-  {
-    id: 1,
-    code: 12345
-  },
-  {
-    id: 2,
-    code: 54321
-  }
-];
+// export const users: User[] = [
+//   {
+//     id: 1,
+//     code: 12345
+//   },
+//   {
+//     id: 2,
+//     code: 54321
+//   }
+// ];
+
+
+
+// TODO: signup and get cats instead of fixed array yes
+export const getUsers = async () => {
+  return new Promise<User[]>(async (resolve, reject) => {
+    try {
+      const data = await getData();
+      resolve(data.users);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export const createUser = async (code: number) => {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      let data = await getData();
+      data.users.push({
+        id: data.next_user_id,
+        code: code
+      });
+      data.next_user_id++;
+      await writeData(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
